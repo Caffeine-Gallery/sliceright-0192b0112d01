@@ -1,6 +1,6 @@
 import { backend } from 'declarations/backend';
 
-let fraction = { numerator: 1, denominator: 4 };
+let fraction = { numerator: 1n, denominator: 4n };
 let userGuess = 0.5;
 let score = null;
 let animationStep = 0;
@@ -18,7 +18,11 @@ const highScoresList = document.getElementById('high-scores-list');
 
 async function generateFraction() {
     try {
-        fraction = await backend.generateFraction();
+        const rawFraction = await backend.generateFraction();
+        fraction = {
+            numerator: BigInt(rawFraction.numerator),
+            denominator: BigInt(rawFraction.denominator)
+        };
         fractionDisplay.textContent = `Where does ${fraction.numerator}/${fraction.denominator} go on the line?`;
     } catch (error) {
         console.error("Error generating fraction:", error);
@@ -39,7 +43,7 @@ async function startNewRound() {
 
 async function checkGuess() {
     try {
-        const actualValue = fraction.numerator / fraction.denominator;
+        const actualValue = Number(fraction.numerator) / Number(fraction.denominator);
         const scoreResult = await backend.calculateScore(fraction, parseFloat(userGuess));
         score = typeof scoreResult === 'bigint' ? Number(scoreResult) : scoreResult;
         
@@ -48,7 +52,7 @@ async function checkGuess() {
         scoreElement.textContent = `Score: ${score}`;
         resultDiv.style.display = 'block';
         
-        await backend.addScore(score, fraction, parseFloat(userGuess));
+        await backend.addScore(BigInt(score), fraction, parseFloat(userGuess));
         updateHighScores();
         animateFractionVisualization();
     } catch (error) {
@@ -63,7 +67,7 @@ function animateFractionVisualization() {
     animationInterval = setInterval(() => {
         animationStep++;
         renderFractionVisual();
-        if (animationStep >= fraction.denominator + fraction.numerator) {
+        if (animationStep >= Number(fraction.denominator) + Number(fraction.numerator)) {
             clearInterval(animationInterval);
         }
     }, 333);
@@ -75,21 +79,24 @@ function renderFractionVisual() {
     ticksContainer.innerHTML = '';
     fillsContainer.innerHTML = '';
 
-    for (let i = 0; i <= fraction.denominator; i++) {
+    const denominatorNumber = Number(fraction.denominator);
+    const numeratorNumber = Number(fraction.numerator);
+
+    for (let i = 0; i <= denominatorNumber; i++) {
         if (i <= animationStep) {
             const tick = document.createElement('div');
             tick.className = 'fraction-tick';
-            tick.style.left = `${(i / fraction.denominator) * 100}%`;
+            tick.style.left = `${(i / denominatorNumber) * 100}%`;
             ticksContainer.appendChild(tick);
         }
     }
 
-    for (let i = 0; i < fraction.numerator; i++) {
-        if (i + fraction.denominator < animationStep) {
+    for (let i = 0; i < numeratorNumber; i++) {
+        if (i + denominatorNumber < animationStep) {
             const fill = document.createElement('div');
             fill.className = 'fraction-fill';
-            fill.style.left = `${(i / fraction.denominator) * 100}%`;
-            fill.style.width = `${(1 / fraction.denominator) * 100}%`;
+            fill.style.left = `${(i / denominatorNumber) * 100}%`;
+            fill.style.width = `${(1 / denominatorNumber) * 100}%`;
             fillsContainer.appendChild(fill);
         }
     }
@@ -103,7 +110,7 @@ async function updateHighScores() {
         highScoresList.innerHTML = '';
         highScores.forEach((score, index) => {
             const li = document.createElement('li');
-            li.textContent = `${index + 1}. Score: ${score.value}, Fraction: ${score.fraction.numerator}/${score.fraction.denominator}, Guess: ${score.guess.toFixed(2)}`;
+            li.textContent = `${index + 1}. Score: ${Number(score.value)}, Fraction: ${Number(score.fraction.numerator)}/${Number(score.fraction.denominator)}, Guess: ${Number(score.guess).toFixed(2)}`;
             highScoresList.appendChild(li);
         });
     } catch (error) {
