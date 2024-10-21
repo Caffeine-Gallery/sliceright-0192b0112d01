@@ -20,6 +20,7 @@ body {
     width: 80%;
     margin: 20px auto;
     position: relative;
+    padding-top: 30px; /* Add padding to make room for the current guess display */
 }
 
 #guess-slider {
@@ -70,14 +71,14 @@ body {
 
 #current-guess-display {
     position: absolute;
-    top: -25px;
+    top: 0;
+    left: 50%;
     transform: translateX(-50%);
     background-color: #4CAF50;
     color: white;
     padding: 2px 5px;
     border-radius: 3px;
     font-size: 12px;
-    transition: left 0.1s ease;
 }
 
 #fraction-visualization {

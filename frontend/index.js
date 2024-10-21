@@ -33,7 +33,6 @@ function updateUserGuessDisplay(guess) {
     const userGuessLine = document.getElementById('user-guess-line');
     userGuessLine.style.left = `${guess * 100}%`;
     currentGuessDisplay.textContent = `Current guess: ${guess.toFixed(2)}`;
-    currentGuessDisplay.style.left = `${guess * 100}%`;
 }
 
 async function generateFraction() {
