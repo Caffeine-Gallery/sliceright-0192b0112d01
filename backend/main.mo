@@ -29,7 +29,8 @@ actor {
   public func calculateScore(fraction: Fraction, guess: Float) : async Nat {
     let actualValue : Float = Float.fromInt(fraction.numerator) / Float.fromInt(fraction.denominator);
     let difference : Float = Float.abs(actualValue - guess);
-    Nat.max(0, 100 - Int.abs(Float.toInt(difference * 1000.0)))
+    let score = Nat.max(0, 100 - Int.abs(Float.toInt(difference * 1000.0)));
+    score
   };
 
   public func addScore(score: Nat, fraction: Fraction, guess: Float) : async () {

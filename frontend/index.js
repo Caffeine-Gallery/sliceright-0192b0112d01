@@ -17,8 +17,13 @@ const newFractionButton = document.getElementById('new-fraction');
 const highScoresList = document.getElementById('high-scores-list');
 
 async function generateFraction() {
-    fraction = await backend.generateFraction();
-    fractionDisplay.textContent = `Where does ${fraction.numerator}/${fraction.denominator} go on the line?`;
+    try {
+        fraction = await backend.generateFraction();
+        fractionDisplay.textContent = `Where does ${fraction.numerator}/${fraction.denominator} go on the line?`;
+    } catch (error) {
+        console.error("Error generating fraction:", error);
+        fractionDisplay.textContent = "Error generating fraction. Please try again.";
+    }
 }
 
 async function startNewRound() {
@@ -33,17 +38,23 @@ async function startNewRound() {
 }
 
 async function checkGuess() {
-    const actualValue = fraction.numerator / fraction.denominator;
-    score = await backend.calculateScore(fraction, userGuess);
-    
-    userGuessElement.textContent = `Your guess: ${userGuess.toFixed(2)}`;
-    correctAnswerElement.textContent = `Correct answer: ${actualValue.toFixed(2)}`;
-    scoreElement.textContent = `Score: ${score}`;
-    resultDiv.style.display = 'block';
-    
-    await backend.addScore(score, fraction, userGuess);
-    updateHighScores();
-    animateFractionVisualization();
+    try {
+        const actualValue = fraction.numerator / fraction.denominator;
+        const scoreResult = await backend.calculateScore(fraction, parseFloat(userGuess));
+        score = typeof scoreResult === 'bigint' ? Number(scoreResult) : scoreResult;
+        
+        userGuessElement.textContent = `Your guess: ${userGuess.toFixed(2)}`;
+        correctAnswerElement.textContent = `Correct answer: ${actualValue.toFixed(2)}`;
+        scoreElement.textContent = `Score: ${score}`;
+        resultDiv.style.display = 'block';
+        
+        await backend.addScore(score, fraction, parseFloat(userGuess));
+        updateHighScores();
+        animateFractionVisualization();
+    } catch (error) {
+        console.error("Error checking guess:", error);
+        scoreElement.textContent = "Error calculating score. Please try again.";
+    }
 }
 
 function animateFractionVisualization() {
@@ -87,13 +98,18 @@ function renderFractionVisual() {
 }
 
 async function updateHighScores() {
-    const highScores = await backend.getHighScores();
-    highScoresList.innerHTML = '';
-    highScores.forEach((score, index) => {
-        const li = document.createElement('li');
-        li.textContent = `${index + 1}. Score: ${score.value}, Fraction: ${score.fraction.numerator}/${score.fraction.denominator}, Guess: ${score.guess.toFixed(2)}`;
-        highScoresList.appendChild(li);
-    });
+    try {
+        const highScores = await backend.getHighScores();
+        highScoresList.innerHTML = '';
+        highScores.forEach((score, index) => {
+            const li = document.createElement('li');
+            li.textContent = `${index + 1}. Score: ${score.value}, Fraction: ${score.fraction.numerator}/${score.fraction.denominator}, Guess: ${score.guess.toFixed(2)}`;
+            highScoresList.appendChild(li);
+        });
+    } catch (error) {
+        console.error("Error updating high scores:", error);
+        highScoresList.innerHTML = '<li>Error fetching high scores</li>';
+    }
 }
 
 guessSlider.addEventListener('input', function(event) {
