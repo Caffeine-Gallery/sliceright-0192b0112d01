@@ -16,6 +16,7 @@ const checkGuessButton = document.getElementById('check-guess');
 const newFractionButton = document.getElementById('new-fraction');
 const highScoresList = document.getElementById('high-scores-list');
 const sliderMarkers = document.getElementById('slider-markers');
+const currentGuessDisplay = document.getElementById('current-guess-display');
 
 function createSliderMarkers() {
     for (let i = 0; i <= 4; i++) {
@@ -25,6 +26,13 @@ function createSliderMarkers() {
         marker.textContent = (i * 0.25).toFixed(2);
         sliderMarkers.appendChild(marker);
     }
+}
+
+function updateUserGuessDisplay(guess) {
+    const userGuessLine = document.getElementById('user-guess-line');
+    userGuessLine.style.left = `${guess * 100}%`;
+    currentGuessDisplay.textContent = `Current guess: ${guess.toFixed(2)}`;
+    currentGuessDisplay.style.left = `${guess * 100}%`;
 }
 
 async function generateFraction() {
@@ -50,6 +58,7 @@ async function startNewRound() {
     resultDiv.style.display = 'none';
     clearInterval(animationInterval);
     renderFractionVisual();
+    updateUserGuessDisplay(userGuess);
 }
 
 async function checkGuess() {
@@ -111,8 +120,6 @@ function renderFractionVisual() {
             fillsContainer.appendChild(fill);
         }
     }
-
-    document.getElementById('user-guess-line').style.left = `${userGuess * 100}%`;
 }
 
 async function updateHighScores() {
@@ -132,7 +139,7 @@ async function updateHighScores() {
 
 guessSlider.addEventListener('input', function(event) {
     userGuess = parseFloat(event.target.value);
-    document.getElementById('user-guess-line').style.left = `${userGuess * 100}%`;
+    updateUserGuessDisplay(userGuess);
 });
 
 checkGuessButton.addEventListener('click', checkGuess);

@@ -68,6 +68,18 @@ body {
     color: #666;
 }
 
+#current-guess-display {
+    position: absolute;
+    top: -25px;
+    transform: translateX(-50%);
+    background-color: #4CAF50;
+    color: white;
+    padding: 2px 5px;
+    border-radius: 3px;
+    font-size: 12px;
+    transition: left 0.1s ease;
+}
+
 #fraction-visualization {
     width: 80%;
     height: 50px;
@@ -96,7 +108,7 @@ body {
     width: 2px;
     height: 100%;
     background-color: red;
-    transition: left 0.3s ease;
+    transition: left 0.1s ease;
 }
 
 button {
