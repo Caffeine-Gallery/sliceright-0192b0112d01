@@ -9,6 +9,7 @@ let animationInterval;
 const guessSlider = document.getElementById('guess-slider');
 const fractionDisplay = document.getElementById('fraction-display');
 const resultDiv = document.getElementById('result');
+const guessFeedbackElement = document.getElementById('guess-feedback');
 const userGuessElement = document.getElementById('user-guess');
 const correctAnswerElement = document.getElementById('correct-answer');
 const scoreElement = document.getElementById('score');
@@ -66,6 +67,11 @@ async function checkGuess() {
         const actualValue = Number(fraction.numerator) / Number(fraction.denominator);
         const scoreResult = await backend.calculateScore(fraction, parseFloat(userGuess));
         score = typeof scoreResult === 'bigint' ? Number(scoreResult) : scoreResult;
+        
+        const isCorrect = Math.abs(userGuess - actualValue) < 0.01; // Allow for small margin of error
+        
+        guessFeedbackElement.textContent = isCorrect ? "Congratulations! Your guess is correct!" : "Not quite right. Try again!";
+        guessFeedbackElement.className = isCorrect ? "correct-guess" : "incorrect-guess";
         
         userGuessElement.textContent = `Your guess: ${userGuess.toFixed(2)}`;
         correctAnswerElement.textContent = `Correct answer: ${actualValue.toFixed(2)}`;

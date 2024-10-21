@@ -135,3 +135,15 @@ button:hover {
     max-height: 200px;
     overflow-y: auto;
 }
+
+.correct-guess {
+    color: #4CAF50;
+    font-weight: bold;
+    font-size: 18px;
+}
+
+.incorrect-guess {
+    color: #f44336;
+    font-weight: bold;
+    font-size: 18px;
+}
