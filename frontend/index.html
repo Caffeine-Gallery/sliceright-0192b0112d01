@@ -3,37 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fraction Fun!</title>
+    <title>Fraction Guessing Game</title>
     <link rel="stylesheet" href="index.css">
 </head>
 <body>
-    <div class="game-container">
-        <h1>Fraction Fun!</h1>
-        <p id="fraction-display">Where does 1/4 go on the line?</p>
-        <div class="slider-container">
+    <div id="app">
+        <h1>Fraction Guessing Game</h1>
+        <div id="fraction-display"></div>
+        <div id="slider-container">
             <input type="range" id="guess-slider" min="0" max="1" step="0.01" value="0.5">
+            <div id="slider-markers"></div>
         </div>
-        <div class="labels">
-            <span>0</span>
-            <span>1</span>
+        <div id="fraction-visualization">
+            <div id="fraction-ticks"></div>
+            <div id="fraction-fills"></div>
+            <div id="user-guess-line"></div>
         </div>
-        <button class="check-button" id="check-guess">Check My Guess!</button>
-        <div id="result" class="result" style="display: none;">
+        <button id="check-guess">Check Guess</button>
+        <button id="new-fraction">New Fraction</button>
+        <div id="result" style="display: none;">
             <p id="user-guess"></p>
             <p id="correct-answer"></p>
             <p id="score"></p>
-            <div class="fraction-visual">
-                <div class="fraction-line"></div>
-                <div id="fraction-ticks"></div>
-                <div id="fraction-fills"></div>
-                <div id="user-guess-line" class="user-guess"></div>
-            </div>
         </div>
-        <button class="new-fraction-button" id="new-fraction">New Fraction</button>
-        <div id="high-scores" class="high-scores">
-            <h2>High Scores</h2>
-            <ul id="high-scores-list"></ul>
-        </div>
+        <h2>High Scores</h2>
+        <ol id="high-scores-list"></ol>
     </div>
     <script type="module" src="index.js"></script>
 </body>

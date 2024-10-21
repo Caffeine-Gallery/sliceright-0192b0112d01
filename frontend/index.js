@@ -15,6 +15,17 @@ const scoreElement = document.getElementById('score');
 const checkGuessButton = document.getElementById('check-guess');
 const newFractionButton = document.getElementById('new-fraction');
 const highScoresList = document.getElementById('high-scores-list');
+const sliderMarkers = document.getElementById('slider-markers');
+
+function createSliderMarkers() {
+    for (let i = 0; i <= 4; i++) {
+        const marker = document.createElement('div');
+        marker.className = 'slider-marker';
+        marker.style.left = `${i * 25}%`;
+        marker.textContent = (i * 0.25).toFixed(2);
+        sliderMarkers.appendChild(marker);
+    }
+}
 
 async function generateFraction() {
     try {
@@ -121,10 +132,12 @@ async function updateHighScores() {
 
 guessSlider.addEventListener('input', function(event) {
     userGuess = parseFloat(event.target.value);
+    document.getElementById('user-guess-line').style.left = `${userGuess * 100}%`;
 });
 
 checkGuessButton.addEventListener('click', checkGuess);
 newFractionButton.addEventListener('click', startNewRound);
 
+createSliderMarkers();
 startNewRound();
 updateHighScores();
