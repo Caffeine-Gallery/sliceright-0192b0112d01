@@ -1,0 +1,17 @@
+type Score = 
+ record {
+   fraction: Fraction;
+   guess: float64;
+   value: nat;
+ };
+type Fraction = 
+ record {
+   denominator: nat;
+   numerator: nat;
+ };
+service : {
+  addScore: (nat, Fraction, float64) -> ();
+  calculateScore: (Fraction, float64) -> (nat);
+  generateFraction: () -> (Fraction);
+  getHighScores: () -> (vec Score) query;
+}
